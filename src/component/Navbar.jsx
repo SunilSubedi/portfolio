@@ -44,10 +44,10 @@ function Navbar() {
                 
               <ul className=" bg-indigo-900 absolute left-0 top-0 w-full p-10 rounded-b-3xl text-white space-y-10 text-center">
                
-                    <li><Link to="/portfolio">Home</Link></li>
-                    <li><Link to="/portfolio">About Me</Link></li>
-                    <li><Link to="/portfolio">Projects</Link></li>
-                    <li><Link to="/portfolio">Contact</Link></li>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/">About Me</Link></li>
+                    <li><Link to="/">Projects</Link></li>
+                    <li><Link to="/">Contact</Link></li>
             </ul>
             <FontAwesomeIcon icon={faX} size='2x' className="p-0 text-in cursor-pointer  z-20" onClick={handleMenu}/>
             </div>

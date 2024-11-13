@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Navbar from './component/Navbar'
 import Content from './component/Content'
+import Project from './component/Project'
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
           <Content></Content>
            </div>
            <div className='relative mt-20'>
-
+              <Project></Project>
            </div>
           
         </div>
