@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Navbar from './component/Navbar'
 
 
 function App() {
@@ -6,9 +7,10 @@ function App() {
 
   return (
     <>
-      <h1 className="text-4xl font-bold underline">
-      Hello world!
-    </h1>
+        <div className="font-nunito h-screen lg:h-screen bg-gradient-to-t from-indigo-200  relative overflow-auto">
+           <Navbar></Navbar>
+          
+        </div>
     </>
   )
 }
