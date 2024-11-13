@@ -5,11 +5,18 @@ import './index.css'
 import App from './App.jsx'
 import ErrorPage from './component/ErrorPage.jsx'
 
-const router = createBrowserRouter([{
+const router = createBrowserRouter([
+  {
    path:"/",
    element:<App/>,
-   errorElement:<ErrorPage/>
-}])
+   errorElement:<ErrorPage/>,
+  },
+],{
+  future : {
+    v7_startTransition:true,
+  }
+}
+)
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
