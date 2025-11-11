@@ -68,7 +68,7 @@ function Content() {
           <div className="p-4 bg-white rounded shadow-sm">
             <div className="flex justify-between">
               <div>
-                <h3 className="font-bold">Tempe Tyre — Tyre Fitter</h3>
+                <h3 className="font-bold">Tempe Tyre — Store Worker</h3>
                 <p className="text-sm text-gray-600">Oct 2022 – Present</p>
               </div>
               <span className="text-sm text-gray-500">Part-time / Full-time</span>
