@@ -3,6 +3,7 @@ import React from 'react'
 export const projects = [
   { id: 1, title: 'Portfolio Site', desc: 'Personal portfolio built with React and Tailwind CSS.', live: 'https://www.sunilsubedi.com/', repo: 'https://github.com/SunilSubedi/portfolio' },
   { id: 2, title: 'Todo App', desc: 'A simple todo application demonstrating state and localStorage.', live: 'https://my-todo-app-eight-pink.vercel.app/', repo: 'https://github.com/SunilSubedi/my-todo-app' },
+  { id: 3, title: 'Resturant Management System (RMS)', desc: 'A full-stack restaurant management system using Next.js, TypeScript, Prisma, and Tailwind CSS.', live: 'https://next-rms.sunilsubedi.com/sign-in', repo:'https://github.com/SunilSubedi/next-rms'}
 ]
 
 export function Project() {
