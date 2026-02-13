@@ -15,10 +15,10 @@ export default function Valentine(){
   useEffect(()=>{
     // sequence: intro -> sapana1 -> sapana2 -> sapana3 -> sapana4 -> final reveal
     let t1 = setTimeout(()=> setStage(1), 2000)
-    let t2 = setTimeout(()=> setStage(2), 4800)
-    let t3 = setTimeout(()=> setStage(3), 7800)
-    let t4 = setTimeout(()=> setStage(4), 10800)
-    let t5 = setTimeout(()=> setStage(5), 15800)
+    let t2 = setTimeout(()=> setStage(2), 5800)
+    let t3 = setTimeout(()=> setStage(3), 8800)
+    let t4 = setTimeout(()=> setStage(4), 11800)
+    let t5 = setTimeout(()=> setStage(5), 16800)
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5) }
   }, [])
 
@@ -62,9 +62,10 @@ export default function Valentine(){
       p.className = 'fw'
       p.style.left = px + 'px'
       p.style.top = py + 'px'
-      p.style.width = (6 + Math.random()*10) + 'px'
-      p.style.height = (6 + Math.random()*10) + 'px'
-      p.style.background = colors[Math.floor(Math.random()*colors.length)]
+      // use a heart character as the particle instead of a colored box
+      p.textContent = '❤'
+      p.style.fontSize = (10 + Math.random()*28) + 'px'
+      p.style.color = colors[Math.floor(Math.random()*colors.length)]
       p.style.transform = `translate(-50%,-50%) scale(${0.6 + Math.random()*0.8})`
       parent.appendChild(p)
       // random trajectory
@@ -81,18 +82,29 @@ export default function Valentine(){
     }
   }
 
-  function rainFlowers(){
+  function rainFlowers({count = 100, emojis = ['🌸','🌺','🌹'], duration = 10000} = {}){
     const parent = containerRef.current
     if(!parent) return
-    const count = 150
+    // distribute flowers across the width with small jitter to create visible gaps
     for(let i=0;i<count;i++){
       const f = document.createElement('div')
       f.className = 'flower'
-      f.style.left = Math.random()*100 + '%'
-      f.style.fontSize = (12 + Math.random()*22) + 'px'
-      f.textContent = '🌸'
+      // even spacing + jitter
+      const base = (i / Math.max(1, count - 1)) * 100
+      const jitter = (Math.random() * 8) - 4 // +/-4%
+      let leftVal = Math.min(98, Math.max(2, base + jitter))
+      f.style.left = leftVal + '%'
+      // slightly larger and more visible
+      f.style.fontSize = (14 + Math.random()*30) + 'px'
+      f.style.opacity = 0.98
+      f.style.textShadow = '0 2px 6px rgba(0,0,0,0.45)'
+      f.textContent = emojis[Math.floor(Math.random()*emojis.length)]
+      // slow down individually a little for a more relaxed fall
+      const extra = Math.random() * 2500
+      const durMs = duration + extra
+      f.style.animationDuration = (durMs/1000) + 's'
       parent.appendChild(f)
-      setTimeout(()=> f.remove(), 7000)
+      setTimeout(()=> f.remove(), durMs + 400)
     }
   }
 
@@ -165,7 +177,9 @@ export default function Valentine(){
 
   return (
     <div ref={containerRef} className="valentine-root">
-      <div className="v-top"> <h1 className="v-title">For Sapana — A little surprise</h1></div>
+      <div className="v-top">
+        <h1 className="v-title">For Sapana — A Little Surprise <span className="v-title-heart">❤</span></h1>
+      </div>
 
       <div className="v-center">
         {stage===0 && (
@@ -210,7 +224,12 @@ export default function Valentine(){
               <div className="revealText">Sapana, will you be my Valentine?</div>
             </div>
             <div className="revealActions">
-              <button ref={yesRef} className="v-yes" onClick={() => { doFireworks(); rainFlowers(); }}>Yes ❤️</button>
+              <button ref={yesRef} className="v-yes" onClick={() => {
+                doFireworks()
+                // two waves: first wave mostly roses, then mixed blooms
+                setTimeout(()=> rainFlowers({count:180, emojis:['🌹','🌺'], duration:8000}), 300)
+                setTimeout(()=> rainFlowers({count:220, emojis:['🌸','🌺','🌹'], duration:9000}), 1200)
+              }}>Yes ❤️</button>
               <button ref={noRef} className="v-no" onClick={() => { swapButtons(); setTimeout(resetSwap, 1400); }}>No</button>
             </div>
           </div>
@@ -243,7 +262,7 @@ export default function Valentine(){
         @keyframes fallFlower{0%{transform:translateY(-20vh) scale(0.6);opacity:1}100%{transform:translateY(100vh) scale(1);opacity:0}}
 
         /* fireworks particles */
-        .fw{position:absolute;width:10px;height:10px;border-radius:50%;opacity:0.95;transform-origin:center;pointer-events:none;z-index:60}
+        .fw{position:absolute;font-size:14px;line-height:1;opacity:0.95;transform-origin:center;pointer-events:none;z-index:60}
         .fw-go{animation:fw-move 3.5s ease-out forwards}
         @keyframes fw-move{0%{transform:translate(-50%,-50%) scale(0.6);opacity:1}100%{transform:translate(calc(var(--dx) - 50%), calc(var(--dy) - 50%)) scale(0.2);opacity:0}}
         /* floating hearts */
