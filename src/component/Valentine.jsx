@@ -15,10 +15,10 @@ export default function Valentine(){
   useEffect(()=>{
     // sequence: intro -> sapana1 -> sapana2 -> sapana3 -> sapana4 -> final reveal
     let t1 = setTimeout(()=> setStage(1), 2000)
-    let t2 = setTimeout(()=> setStage(2), 3800)
-    let t3 = setTimeout(()=> setStage(3), 6800)
-    let t4 = setTimeout(()=> setStage(4), 9800)
-    let t5 = setTimeout(()=> setStage(5), 12800)
+    let t2 = setTimeout(()=> setStage(2), 4800)
+    let t3 = setTimeout(()=> setStage(3), 7800)
+    let t4 = setTimeout(()=> setStage(4), 10800)
+    let t5 = setTimeout(()=> setStage(5), 15800)
     return ()=>{ clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5) }
   }, [])
 
