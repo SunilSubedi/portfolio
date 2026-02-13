@@ -21,6 +21,7 @@ function Content() {
           <div className="mt-4 flex gap-3">
             <button onClick={saveResume} className="px-4 py-2 bg-indigo-700 text-white rounded">Download Resume</button>
             <a href="#contact" className="px-4 py-2 border border-indigo-700 text-indigo-700 rounded">Contact</a>
+            <a href="/valentine" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-pink-500 text-white rounded shadow">For You ❤️</a>
           </div>
         </div>
       </section>

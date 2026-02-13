@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For You ❤️</title>
+  <style>
+    :root{--bg:#0f172a;--pink:#ff4585;--soft:#ffd3e0}
+    html,body{height:100%;margin:0}
+    body{background:linear-gradient(180deg,#071028 0%, #0f172a 60%);font-family:Inter,system-ui,Arial;color:#fff;overflow:hidden}
+    .stage{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column}
+    .title{font-size:clamp(20px,4vw,36px);text-align:center;margin-bottom:10px}
+    .score{font-size:18px;color:var(--soft);margin-bottom:18px}
+    .hearts{position:absolute;inset:0;pointer-events:none}
+    .heart{position:absolute;width:48px;height:48px;background:transparent;pointer-events:auto;cursor:pointer;transform-origin:center;}
+    .heart svg{width:100%;height:100%;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.35))}
+    @keyframes fall{0%{transform:translateY(-120vh) rotate(0deg);opacity:1}100%{transform:translateY(120vh) rotate(360deg);opacity:0}}
+    .pop{animation:pop .28s ease forwards}
+    @keyframes pop{0%{transform:scale(1);opacity:1}100%{transform:scale(1.35);opacity:0}}
+    .endMsg{position:relative;z-index:40;padding:20px 28px;background:linear-gradient(90deg,var(--pink),#ff7ab1);border-radius:12px;color:#061026;margin-top:18px;display:none}
+    .controls{position:fixed;left:16px;top:16px;display:flex;gap:8px}
+    .btn{background:#111827;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+    .small{font-size:13px;opacity:0.9}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="title">Happy Valentine's Day — click the hearts!</div>
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="endMsg" id="endMsg">All hearts collected! Love you ❤️</div>
+    <div class="hearts" id="hearts"></div>
+    <div class="controls">
+      <a class="btn small" id="startBtn">Start</a>
+      <a class="btn small" id="stopBtn">Stop</a>
+      <a class="btn small" id="resetBtn">Reset</a>
+    </div>
+  </div>
+
+  <script>
+    const heartsEl = document.getElementById('hearts')
+    const scoreEl = document.getElementById('score')
+    const endMsg = document.getElementById('endMsg')
+    const startBtn = document.getElementById('startBtn')
+    const stopBtn = document.getElementById('stopBtn')
+    const resetBtn = document.getElementById('resetBtn')
+
+    let running = false
+    let interval = null
+    let score = 0
+    let spawned = 0
+
+    function makeHeart(){
+      const h = document.createElement('div')
+      h.className = 'heart'
+      const size = 36 + Math.random()*42
+      h.style.width = size + 'px'
+      h.style.height = size + 'px'
+      const left = Math.random()*100
+      h.style.left = `calc(${left}% - ${size/2}px)`
+      h.style.top = `-80px`
+      const dur = 6 + Math.random()*6
+      const rot = (Math.random()*60 - 30) + 'deg'
+      h.style.animation = `fall ${dur}s linear`
+      h.innerHTML = `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21s-7.5-4.5-9.5-8.5C-1 6.5 4 2 7.5 4.5 9 6 12 9 12 9s3-3 4.5-4.5C20 2 24 6.5 21.5 12.5 19.5 16.5 12 21 12 21z" fill="url(#g)"/></svg>`
+      // random gradient
+      const g = Math.random() > 0.5 ? ['#ff6b9a','#ff2d8a'] : ['#ff8fb3','#ff4da1']
+      h.querySelector('svg').innerHTML = `<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="${g[0]}"/><stop offset="1" stop-color="${g[1]}"/></linearGradient></defs>` + h.querySelector('svg').innerHTML
+      heartsEl.appendChild(h)
+
+      // remove after animation
+      const removeAfter = setTimeout(()=>{ if(h.parentNode) h.parentNode.removeChild(h) }, dur*1000 + 200)
+
+      h.addEventListener('click', (e)=>{
+        e.stopPropagation()
+        score += 1
+        scoreEl.textContent = score
+        h.classList.add('pop')
+        // small burst
+        setTimeout(()=>{ if(h.parentNode) h.parentNode.removeChild(h) }, 260)
+        clearTimeout(removeAfter)
+        spawned--
+        checkEnd()
+      })
+
+      spawned++
+    }
+
+    function spawnLoop(){
+      interval = setInterval(()=>{
+        // spawn 1-3 hearts per tick
+        const n = 1 + Math.floor(Math.random()*2)
+        for(let i=0;i<n;i++) makeHeart()
+        // stop auto spawn if too many
+        if(spawned > 80){ clearInterval(interval); interval = null }
+      }, 700)
+    }
+
+    function start(){ if(running) return; running = true; spawnLoop(); endMsg.style.display='none' }
+    function stop(){ running=false; if(interval) clearInterval(interval); interval=null }
+    function reset(){ stop(); heartsEl.innerHTML=''; score=0; scoreEl.textContent=0; spawned=0; endMsg.style.display='none' }
+    function checkEnd(){ if(spawned<=0 && !running) { endMsg.style.display='block' } }
+
+    startBtn.addEventListener('click', ()=>{ start() })
+    stopBtn.addEventListener('click', ()=>{ stop(); checkEnd() })
+    resetBtn.addEventListener('click', ()=>{ reset() })
+
+    // keyboard: space toggles
+    window.addEventListener('keydown', (e)=>{
+      if(e.code==='Space'){ e.preventDefault(); running? stop() : start() }
+    })
+
+    // auto-start for a nice surprise
+    setTimeout(()=>{ start() }, 600)
+  </script>
+</body>
+</html>
